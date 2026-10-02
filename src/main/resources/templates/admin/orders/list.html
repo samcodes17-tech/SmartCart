@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders — SmartCart Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/admin-nav :: nav}"></div>
+
+<div class="page-content page-content-wide">
+    <h1>Orders</h1>
+
+    <table class="data-table" th:if="${not #lists.isEmpty(orders)}">
+        <thead>
+        <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.user.email}"></td>
+            <td th:text="${#temporals.format(order.orderDate, 'dd MMM yyyy, HH:mm')}"></td>
+            <td th:text="'₹' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}"></td>
+            <td><span class="status-badge status-ok" th:text="${order.status}"></span></td>
+            <td><a th:href="@{/admin/orders/{id}(id=${order.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.isEmpty(orders)}" class="empty-state">No orders placed yet.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>Checkout | SmartCart</title>
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          th:href="@{/css/style.css}">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+</head>
+
+<body>
+
+
+<div th:replace="~{fragments/customer-nav :: nav}"></div>
+
+<div class="checkout-page">
+
+    <!-- Progress -->
+
+    <div class="checkout-progress">
+
+        <div class="progress-step active">
+
+            <div class="circle">✓</div>
+
+            <span>Cart</span>
+
+        </div>
+
+        <div class="progress-line active"></div>
+
+        <div class="progress-step active">
+
+            <div class="circle">✓</div>
+
+            <span>Checkout</span>
+
+        </div>
+
+        <div class="progress-line"></div>
+
+        <div class="progress-step">
+
+            <div class="circle">3</div>
+
+            <span>Payment</span>
+
+        </div>
+
+    </div>
+
+    <div class="checkout-layout">
+
+        <!-- LEFT SIDE -->
+
+        <div class="checkout-main">
+
+            <!-- Customer -->
+
+            <div class="checkout-card">
+
+                <h2>👤 Customer Details</h2>
+
+                <div class="customer-box">
+
+                    <div class="avatar"
+                         th:text="${#strings.substring(customer.name,0,1)}">
+                        S
+                    </div>
+
+                    <div>
+
+                        <h3 th:text="${customer.name}"></h3>
+
+                        <p th:text="${customer.email}"></p>
+
+                        <span class="verified">
+                            ✔ Verified Customer
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Delivery -->
+
+            <div class="checkout-card">
+
+                <h2>📍 Delivery Address</h2>
+
+                <p>SRM Institute of Science & Technology</p>
+
+                <p>Kattankulathur</p>
+
+                <p>Chennai, Tamil Nadu</p>
+
+                <button class="change-btn">
+
+                    Change Address
+
+                </button>
+
+            </div>
+
+            <!-- Order Summary -->
+
+            <div class="checkout-card">
+
+                <h2>📦 Order Summary</h2>
+
+                <div class="product-card"
+
+                     th:each="item : ${cartItems}">
+
+                    <div class="product-image">
+
+                        <img th:src="${item.product.imageUrl}"
+                             alt="Product">
+
+                    </div>
+
+                    <div class="product-info">
+
+                        <h3 th:text="${item.product.name}"></h3>
+
+                        <div class="rating">
+
+                            ★★★★★
+
+                        </div>
+
+                        <p>
+
+                            Quantity :
+                            <strong th:text="${item.quantity}"></strong>
+
+                        </p>
+
+                        <p class="stock">
+
+                            ✔ In Stock
+
+                        </p>
+
+                    </div>
+
+                    <div class="product-price">
+
+                        ₹<span th:text="${item.product.price}"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+
+        <aside class="checkout-sidebar">
+
+            <!-- Price -->
+
+            <div class="payment-card">
+
+                <h2>💳 Price Details</h2>
+
+                <div class="payment-row">
+
+                    <span>
+
+                        Items
+
+                    </span>
+
+                    <span>
+
+                        ₹<span th:text="${total}"></span>
+
+                    </span>
+
+                </div>
+
+                <div class="payment-row">
+
+                    <span>
+
+                        Delivery
+
+                    </span>
+
+                    <span class="green">
+
+                        FREE
+
+                    </span>
+
+                </div>
+
+                <div class="payment-row">
+
+                    <span>
+
+                        Discount
+
+                    </span>
+
+                    <span>
+
+                        ₹0
+
+                    </span>
+
+                </div>
+
+                <hr>
+
+                <div class="payment-total">
+
+                    <span>Total</span>
+
+                    <span>
+
+                        ₹<span th:text="${total}"></span>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- Offers -->
+
+            <div class="payment-card">
+
+                <h2>🎁 Available Offers</h2>
+
+                <div class="offer">
+
+                    <strong>WELCOME500</strong>
+
+                    <p>
+
+                        ₹500 OFF on your first order
+
+                    </p>
+
+                </div>
+
+                <div class="offer">
+
+                    <strong>SAVE10</strong>
+
+                    <p>
+
+                        10% OFF above ₹10,000
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- Secure -->
+
+            <div class="payment-card">
+
+                <h2>🔒 Secure Checkout</h2>
+
+                <ul class="secure-list">
+
+                    <li>✔ SSL Encrypted Payment</li>
+
+                    <li>✔ Powered by Razorpay</li>
+
+                    <li>✔ UPI • Cards • Wallets</li>
+
+                    <li>✔ Instant Email Invoice</li>
+
+                    <li>✔ 100% Secure Checkout</li>
+
+                </ul>
+
+                <button id="rzp-button"
+
+                        class="pay-btn">
+
+                    💳 Pay ₹
+                    <span th:text="${total}"></span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+
+    const options = {
+
+        key: [[${key}]],
+
+        amount: [[${amount}]] * 100,
+
+        currency: "INR",
+
+        name: "SmartCart",
+
+        description: "Secure Payment",
+
+        image: "/images/logo.png",
+
+        order_id: [[${orderId}]],
+
+        handler: function (response) {
+
+            window.location.href =
+                "/payment/success?"
+                + "paymentId=" + response.razorpay_payment_id
+                + "&orderId=" + response.razorpay_order_id
+                + "&signature=" + response.razorpay_signature;
+
+        },
+
+        prefill: {
+
+            name: [[${customer.name}]],
+
+            email: [[${customer.email}]]
+
+        },
+
+        theme: {
+
+            color: "#2563eb"
+
+        }
+
+    };
+
+    const rzp = new Razorpay(options);
+
+    document.getElementById("rzp-button").onclick = function (e) {
+
+        rzp.open();
+
+        e.preventDefault();
+
+    };
+
+</script>
+
+</body>
+</html>

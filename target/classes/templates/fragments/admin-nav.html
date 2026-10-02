@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="nav">
+    <div class="topbar">
+        <div class="topbar-logo">Smart<span>Cart</span> <small style="opacity:.6; font-weight:400;">Admin</small></div>
+        <nav class="admin-links">
+            <a th:href="@{/home}">Dashboard</a>
+            <a th:href="@{/admin/products}">Products</a>
+            <a th:href="@{/admin/categories}">Categories</a>
+            <a th:href="@{/admin/inventory}">Inventory</a>
+            <a th:href="@{/admin/suppliers}">Suppliers</a>
+            <a th:href="@{/admin/orders}">Orders</a>
+        </nav>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">Log out</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop — SmartCart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/customer-nav :: nav}"></div>
+
+<div class="page-content page-content-wide">
+    <h1>Products</h1>
+
+    <div class="category-strip">
+        <button class="category-chip active" data-category="all">
+            <span>All</span>
+        </button>
+        <button class="category-chip" th:each="cat : ${categories}" th:attr="data-category=${cat.name}">
+            <span class="category-emoji"></span>
+            <span th:text="${cat.name}"></span>
+        </button>
+    </div>
+
+    <div class="product-grid" th:if="${not #lists.isEmpty(items)}">
+        <div class="product-card" th:each="item : ${items}"
+              th:attr="data-category=${item.product.category != null ? item.product.category.name : ''}">
+            <div class="product-card-name" th:text="${item.product.name}"></div>
+            <div class="product-card-category" th:text="${item.product.category != null ? item.product.category.name : ''}"></div>
+            <div class="product-card-price" th:text="'₹' + ${#numbers.formatDecimal(item.product.price, 1, 2)}"></div>
+
+            <span class="status-badge status-ok" th:if="${item.inStock}">In Stock</span>
+            <span class="status-badge status-low" th:unless="${item.inStock}">Out of Stock</span>
+
+            <form th:action="@{/cart/add}" method="post" class="add-to-cart-form" th:if="${item.inStock}">
+                <input type="hidden" name="productId" th:value="${item.product.id}">
+                <input type="number" name="quantity" min="1" th:max="${item.quantityInStock}" value="1">
+                <button type="submit" class="btn-primary btn-inline">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+
+    <p th:if="${#lists.isEmpty(items)}" class="empty-state">No products available yet.</p>
+</div>
+<script>
+    const categoryEmojis = {
+        electronics: '📱', mobile: '📱', phone: '📱',
+        fashion: '👕', clothing: '👕', apparel: '👕',
+        laptop: '💻', computer: '💻',
+        home: '🏠', furniture: '🛋️',
+        grocery: '🍎', vegetable: '🥕', fruit: '🍎', dairy: '🥛', snack: '🍪', beverage: '🥤',
+        watch: '⌚', accessory: '💍',
+        book: '📚', stationery: '✏️',
+        toy: '🧸', sports: '⚽', beauty: '💄', shoe: '👟'
+    };
+    function pickEmoji(name) {
+        const lower = name.toLowerCase();
+        for (const key in categoryEmojis) {
+            if (lower.includes(key)) return categoryEmojis[key];
+        }
+        return '🏷️';
+    }
+    document.querySelectorAll('.category-chip[data-category]:not([data-category="all"])').forEach(chip => {
+        const name = chip.getAttribute('data-category');
+        chip.querySelector('.category-emoji').textContent = pickEmoji(name);
+    });
+
+    document.querySelectorAll('.category-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            const selected = chip.getAttribute('data-category');
+            document.querySelectorAll('.product-card').forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                card.style.display = (selected === 'all' || cardCategory === selected) ? '' : 'none';
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

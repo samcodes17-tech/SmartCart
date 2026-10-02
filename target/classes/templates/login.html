@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login — SmartCart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="auth-wrapper">
+    <div class="auth-brand">
+        <div class="auth-brand-content">
+            <div class="auth-logo">Smart<span>Cart</span></div>
+            <h1>Stock and sales, finally in sync.</h1>
+            <p>Every order updates your inventory in real time — no more overselling, no more spreadsheet reconciliation.</p>
+        </div>
+    </div>
+
+    <div class="auth-form-side">
+        <div class="auth-form-box">
+            <h2>Welcome back</h2>
+            <p class="auth-subtext">New here? <a th:href="@{/register}">Create an account</a></p>
+
+            <div class="alert alert-success" th:if="${param.registered}">
+                Account created. You can log in now.
+            </div>
+            <div class="alert alert-success" th:if="${param.logout}">
+                You've been logged out.
+            </div>
+            <div class="alert alert-error" th:if="${param.error}">
+                Incorrect email or password.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="field">
+                    <label for="username">Email</label>
+                    <input type="email" id="username" name="username" required autofocus>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Log in</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

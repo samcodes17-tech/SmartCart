@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="nav">
+    <div class="topbar">
+        <div class="topbar-logo">Smart<span>Cart</span></div>
+        <nav class="admin-links">
+            <a th:href="@{/home}">Dashboard</a>
+            <a th:href="@{/products}">Shop</a>
+            <a th:href="@{/cart}" class="nav-cart-link">
+                Cart
+                <span class="cart-badge" th:if="${cartCount != null and cartCount > 0}" th:text="${cartCount}"></span>
+            </a>
+            <a th:href="@{/orders}">My Orders</a>
+        </nav>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">Log out</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
